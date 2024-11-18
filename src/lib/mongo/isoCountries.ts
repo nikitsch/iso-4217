@@ -7,11 +7,14 @@ let isoCountries;
 async function init() {
   if (db) return;
 
+  console.log('clientPromise:', clientPromise);
   try {
     client = await clientPromise;
     db = await client.db();
     isoCountries = await db.collection('isoCountries');
-  } catch {
+  } catch (error) {
+    console.log({ error });
+
     throw new Error('Failed to stablish connection to datadase');
   }
 }

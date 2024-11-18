@@ -3,10 +3,10 @@ import { getISOCountries } from '@/lib/mongo/isoCountries';
 const handler = async (req, res) => {
   if (req.method === 'GET') {
     try {
-      const {} = await getISOCountries();
+      const { isoCountries, error } = await getISOCountries();
       if (error) throw new Error(error);
 
-      return res.status(200).json({ getISOCountries });
+      return res.status(200).json({ isoCountries });
     } catch (error) {
       return res.status(500).json({ error: error.message });
     }
