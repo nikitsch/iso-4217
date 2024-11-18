@@ -1,15 +1,15 @@
-import { useState, useEffect } from 'react';
+// import { useState, useEffect } from 'react';
 
-export const useCountriesData = () => {
-  const [data, setData] = useState(null);
+// export const useCountriesData = () => {
+//   const [data, setData] = useState(null);
 
-  useEffect(() => {
-    fetch('/api/countries')
-      .then((res) => res.json())
-      .then(setData);
-  }, []);
+//   useEffect(() => {
+//     fetch('/api/countries')
+//       .then((res) => res.json())
+//       .then(setData);
+//   }, []);
 
-  console.log({ data });
+//   console.log({ data });
 
-  return data;
-};
+//   return data;
+// };

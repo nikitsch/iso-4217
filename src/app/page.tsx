@@ -1,16 +1,34 @@
-import { getISOCountries } from '@/lib/mongo/isoCountries';
+import { Country } from '@/interfaces';
 import './styles.css';
 
-async function fetchISOCountries() {
-  const { isoCountries } = await getISOCountries();
-  if (!isoCountries) throw new Error('Failed to fetch isoCountries P');
-
-  return isoCountries;
-}
-
 export default async function Home() {
-  const isoCountries = await fetchISOCountries();
+  const res = await fetch('http://localhost:3000/api/isoCountries', {
+    // cache: 'no-store', // Опционально: отключает кэширование
+  });
+
+  // if (!res.ok) {
+  //   console.error('Failed to fetch data');
+  //   return <div>Error loading data</div>;
+  // }
+
+  const isoCountries = await res.json();
   console.log({ isoCountries });
 
-  return <div className="container mx-auto p-4">Hello</div>;
+  if (!isoCountries) return <p>Loading...</p>;
+
+  return (
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4">ISO Countries</h1>
+      <div className="list">
+        {isoCountries.map((item: Country) => (
+          <div key={item._id} className="flex justify-between p-2">
+            <span>
+              {item.country} - {item.alphabeticCode}
+            </span>
+            <input type="checkbox" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
