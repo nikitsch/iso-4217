@@ -2,20 +2,16 @@
 
 import { useState } from 'react';
 
-import { Country, Table } from '@/interfaces';
-import { useGetData } from '@/hooks/useGetData';
+import { Country, Table, TableEnum } from '@/interfaces';
 
 import './styles.css';
+import { useGetStaticData } from '@/hooks/useGetStaticData';
+import { useGetDynamicData } from '@/hooks/useGetDynamicData';
 
 export default function Home() {
-  const [table, setTable] = useState<Table>('CURRENCY');
-  const {
-    isoCountries,
-    currency,
-    inactiveCountries,
-    inactiveCurrencies,
-    loading,
-  } = useGetData(table);
+  const [table, setTable] = useState<Table>(TableEnum.COUNTRIES);
+  const { isoCountries, currency } = useGetStaticData();
+  const { inactiveCountries, inactiveCurrencies } = useGetDynamicData();
   // const { updateData } = useUpdateData(table, () => useGetData(table));
 
   console.log({
@@ -23,15 +19,15 @@ export default function Home() {
     currency,
     inactiveCountries,
     inactiveCurrencies,
-    loading,
+    table,
   });
 
   if (!isoCountries) return <p>Loading...</p>;
 
   return (
     <div className="container mx-auto p-4">
-      <button onClick={() => setTable('COUNTRIES')}>Countries</button>
-      <button onClick={() => setTable('CURRENCY')}>Currency</button>
+      <button onClick={() => setTable(TableEnum.COUNTRIES)}>Countries</button>
+      <button onClick={() => setTable(TableEnum.CURRENCY)}>Currency</button>
       <h1 className="text-2xl font-bold mb-4">ISO Countries</h1>
       <div className="list">
         {isoCountries.map((item: Country) => (

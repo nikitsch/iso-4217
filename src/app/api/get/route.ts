@@ -1,59 +1,37 @@
-import { Table } from '@/interfaces';
+import { BD_Naming, InactiveCountries, InactiveCurrencies } from '@/interfaces';
 import clientPromise from '@/lib/mongo';
 
-export async function GET(request: { url: string | URL }) {
+export async function GET() {
   try {
     const client = await clientPromise;
-    const db = client.db('iso-4217');
+    const db = client.db(BD_Naming.BD);
+    const isoCountries = await db
+      .collection(BD_Naming.COLL_ISO_COUNTRIES)
+      .find({})
+      .toArray();
 
-    const { searchParams } = new URL(request.url);
-    const table = searchParams.get('table') as Table;
+    const currency = await db.collection(BD_Naming.COLL_CURRENCY).findOne({});
 
-    if (!table) {
-      return new Response(JSON.stringify({ error: 'Table is required' }), {
-        status: 400,
-      });
-    }
+    const inactiveCountries = await db
+      .collection<InactiveCountries>(BD_Naming.COLL_INACT_COUNTRIES)
+      .findOne({ _id: 'inactiveCountries' });
 
-    if (table === 'COUNTRIES') {
-      const isoCountries = await db
-        .collection('isoCountries')
-        .find({})
-        .toArray();
-      const inactiveCountries = await db
-        .collection('inactiveCountries')
-        .find({})
-        .toArray();
+    const inactiveCurrencies = await db
+      .collection<InactiveCurrencies>(BD_Naming.COLL_INACT_CURRENCY)
+      .findOne({ _id: 'inactiveCurrencies' });
 
-      return new Response(JSON.stringify({ isoCountries, inactiveCountries }), {
+    return new Response(
+      JSON.stringify({
+        isoCountries,
+        currency,
+        inactiveCountries: inactiveCountries?.countries || [],
+        inactiveCurrencies: inactiveCurrencies?.currencies || [],
+      }),
+      {
         status: 200,
         headers: { 'Content-Type': 'application/json' },
-      });
-    }
-
-    if (table === 'CURRENCY') {
-      const isoCountries = await db
-        .collection('isoCountries')
-        .find({})
-        .toArray();
-      const currency = await db.collection('currency').find({}).toArray();
-      const inactiveCurrencies = await db
-        .collection('inactiveCurrencies')
-        .find({})
-        .toArray();
-
-      return new Response(
-        JSON.stringify({ isoCountries, currency, inactiveCurrencies }),
-        {
-          status: 200,
-          headers: { 'Content-Type': 'application/json' },
-        },
-      );
-    }
-
-    return new Response(JSON.stringify({ error: 'Unknown table' }), {
-      status: 400,
-    });
+      },
+    );
   } catch (error) {
     console.error('Failed to fetch data:', error);
     return new Response(JSON.stringify({ error: 'Failed to fetch data' }), {

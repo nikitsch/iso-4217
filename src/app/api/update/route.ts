@@ -1,14 +1,27 @@
-import { Action, Country, Table } from '@/interfaces';
+import {
+  Action,
+  ActionEnum,
+  BD_Naming,
+  Country,
+  InactiveCountries,
+  InactiveCurrencies,
+  Table,
+  TableEnum,
+} from '@/interfaces';
 import clientPromise from '@/lib/mongo';
 
+type POSTRequestType = {
+  table: Table;
+  action: Action;
+  element: Pick<Country, 'country'> | Pick<Country, 'numericCode'>;
+};
+
 export async function POST(request: {
-  json: () =>
-    | PromiseLike<{ table: Table; action: Action; element: Country }>
-    | { table: Table; action: Action; element: Country };
+  json: () => PromiseLike<POSTRequestType> | POSTRequestType;
 }) {
   try {
     const client = await clientPromise;
-    const db = client.db('iso-4217');
+    const db = client.db(BD_Naming.BD);
 
     const { table, action, element } = await request.json();
 
@@ -19,30 +32,40 @@ export async function POST(request: {
       );
     }
 
-    if (table === 'COUNTRIES') {
-      const collection = db.collection('inactiveCountries');
+    let collectionName:
+      | BD_Naming.COLL_INACT_COUNTRIES
+      | BD_Naming.COLL_INACT_CURRENCY;
+    let updateKey: 'countries' | 'currencies';
 
-      if (action === 'ADD') {
-        await collection.insertOne(element.country);
-      } else if (action === 'REMOVE') {
-        await collection.deleteOne(element.country);
-      } else {
-        return new Response(JSON.stringify({ error: 'Invalid action' }), {
+    switch (table) {
+      case TableEnum.COUNTRIES:
+        collectionName = BD_Naming.COLL_INACT_COUNTRIES;
+        updateKey = 'countries';
+        break;
+      case TableEnum.CURRENCY:
+        collectionName = BD_Naming.COLL_INACT_CURRENCY;
+        updateKey = 'currencies';
+        break;
+      default:
+        return new Response(JSON.stringify({ error: 'Invalid table' }), {
           status: 400,
         });
-      }
-    } else if (table === 'CURRENCY') {
-      const collection = db.collection('inactiveCurrencies');
+    }
 
-      if (action === 'ADD') {
-        await collection.insertOne(element.numericCode);
-      } else if (action === 'REMOVE') {
-        await collection.deleteOne(element.numericCode);
-      } else {
-        return new Response(JSON.stringify({ error: 'Invalid action' }), {
-          status: 400,
-        });
-      }
+    const collection = db.collection<InactiveCountries | InactiveCurrencies>(
+      collectionName,
+    );
+
+    if (action === ActionEnum.ADD) {
+      await collection.updateOne(
+        { _id: collectionName },
+        { $addToSet: { [updateKey]: element } },
+      );
+    } else if (action === ActionEnum.REMOVE) {
+      await collection.updateOne(
+        { _id: collectionName },
+        { $pull: { [updateKey]: element } },
+      );
     } else {
       return new Response(JSON.stringify({ error: 'Invalid action' }), {
         status: 400,
