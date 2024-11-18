@@ -1,5 +1,9 @@
-export type ISOCountries = Country[];
+export type Table = 'COUNTRIES' | 'CURRENCY';
+// export enum TableEnum
 
+export type Action = 'ADD' | 'REMOVE';
+
+export type ISOCountries = Country[];
 export interface Country {
   _id: string;
   country: string;
@@ -12,10 +16,10 @@ export interface Country {
 // export interface Currency {
 //   [key: COUNTRY.numericCode]: COUNTRY.alphabeticCode;
 // }
-export interface Currency2 {
+export interface Currency {
   [key: string]: string;
 }
-export interface Currency {
+export interface Currency2 {
   '8': string;
   '12': string;
   '32': string;
@@ -178,3 +182,6 @@ export interface Currency {
   '986': string;
   '994': string;
 }
+
+export type InactiveCountriesType = Pick<Country, 'country'>[];
+export type InactiveCurrenciesType = Pick<Country, 'numericCode'>[];

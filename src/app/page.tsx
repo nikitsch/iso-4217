@@ -1,23 +1,37 @@
-import { Country } from '@/interfaces';
+'use client';
+
+import { useState } from 'react';
+
+import { Country, Table } from '@/interfaces';
+import { useGetData } from '@/hooks/useGetData';
+
 import './styles.css';
 
-export default async function Home() {
-  const res = await fetch('http://localhost:3000/api/isoCountries', {
-    // cache: 'no-store', // Опционально: отключает кэширование
+export default function Home() {
+  const [table, setTable] = useState<Table>('CURRENCY');
+  const {
+    isoCountries,
+    currency,
+    inactiveCountries,
+    inactiveCurrencies,
+    loading,
+  } = useGetData(table);
+  // const { updateData } = useUpdateData(table, () => useGetData(table));
+
+  console.log({
+    isoCountries,
+    currency,
+    inactiveCountries,
+    inactiveCurrencies,
+    loading,
   });
-
-  // if (!res.ok) {
-  //   console.error('Failed to fetch data');
-  //   return <div>Error loading data</div>;
-  // }
-
-  const isoCountries = await res.json();
-  console.log({ isoCountries });
 
   if (!isoCountries) return <p>Loading...</p>;
 
   return (
     <div className="container mx-auto p-4">
+      <button onClick={() => setTable('COUNTRIES')}>Countries</button>
+      <button onClick={() => setTable('CURRENCY')}>Currency</button>
       <h1 className="text-2xl font-bold mb-4">ISO Countries</h1>
       <div className="list">
         {isoCountries.map((item: Country) => (
