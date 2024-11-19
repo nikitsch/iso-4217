@@ -1,13 +1,14 @@
 'use client';
 
+import { Table } from '@/interfaces';
 import { useEffect, useState } from 'react';
 
-export function useGetDynamicData() {
+export function useGetDynamicData(table: Table) {
   const [inactiveCountries, setInactiveCountries] = useState<string[]>([]);
   const [inactiveCurrencies, setInactiveCurrencies] = useState<number[]>([]);
 
-  const fetchDynamicData = async () => {
-    const res = await fetch(`/api/get`);
+  const fetchDynamicData = async (table: Table) => {
+    const res = await fetch(`/api/getDynamic?table=${table}`);
 
     if (res.ok) {
       const { inactiveCountries, inactiveCurrencies } = await res.json();
@@ -17,8 +18,8 @@ export function useGetDynamicData() {
   };
 
   useEffect(() => {
-    fetchDynamicData();
-  }, []);
+    fetchDynamicData(table);
+  }, [table]);
 
   return { inactiveCountries, inactiveCurrencies, fetchDynamicData };
 }

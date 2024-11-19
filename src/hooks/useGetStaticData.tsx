@@ -9,7 +9,7 @@ export function useGetStaticData() {
 
   useEffect(() => {
     const fetchStaticData = async () => {
-      const res = await fetch('/api/get');
+      const res = await fetch('/api/getStatic');
 
       if (res.ok) {
         const { isoCountries, currency } = await res.json();

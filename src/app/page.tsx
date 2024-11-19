@@ -14,8 +14,8 @@ export default function Home() {
   const [table, setTable] = useState<Table>(TableEnum.COUNTRIES);
   const { isoCountries, currency } = useGetStaticData();
   const { inactiveCountries, inactiveCurrencies, fetchDynamicData } =
-    useGetDynamicData();
-  const { updateData } = useUpdateData(table, fetchDynamicData);
+    useGetDynamicData(table);
+  const { updateData } = useUpdateData(table, () => fetchDynamicData(table));
 
   console.log({
     isoCountries,
@@ -47,6 +47,7 @@ export default function Home() {
               {item.country} - {item.alphabeticCode}
             </span>
             <input
+              id="countries"
               type="checkbox"
               checked={getInputCheckboxValue(inactiveCountries, item.country)}
               onChange={(event) => toggleActive(event.target, item.country)}
