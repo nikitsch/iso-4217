@@ -41,3 +41,9 @@ export enum BD_Naming {
   COLL_INACT_COUNTRIES = 'inactiveCountries',
   COLL_INACT_CURRENCY = 'inactiveCurrencies',
 }
+
+export interface PageList {
+  _id: string;
+  alphabeticCodes: string[];
+  countries: string[];
+}
