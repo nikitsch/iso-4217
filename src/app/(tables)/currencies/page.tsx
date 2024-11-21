@@ -10,7 +10,7 @@ import { getInputCheckboxValue } from '@/helpers/getInputCheckboxValue';
 import { useUpdateData } from '@/hooks/useUpdateData';
 
 export default function Currencies() {
-  const { isoCountries, currency } = useGetStaticData();
+  const { isoCountries } = useGetStaticData();
   const { inactiveCurrencies, fetchDynamicData } = useGetDynamicData(
     TableEnum.CURRENCY,
   );
@@ -67,7 +67,7 @@ export default function Currencies() {
   return (
     <div>
       <h1 className="table-title">Currency</h1>
-      {isoCountries?.length && currency ? (
+      {isoCountries?.length ? (
         <div className="list">
           {Object.entries(getCurrencies(isoCountries))
             .sort(sortCountries)
