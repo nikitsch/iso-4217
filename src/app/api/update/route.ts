@@ -1,7 +1,7 @@
 import {
   Action,
   ActionEnum,
-  BD_Naming,
+  DBNaming,
   Country,
   InactiveCountries,
   InactiveCurrencies,
@@ -21,7 +21,7 @@ export async function POST(request: {
 }) {
   try {
     const client = await clientPromise;
-    const db = client.db(BD_Naming.BD);
+    const db = client.db(DBNaming.DB);
 
     const { table, action, element } = await request.json();
 
@@ -33,17 +33,17 @@ export async function POST(request: {
     }
 
     let collectionName:
-      | BD_Naming.COLL_INACT_COUNTRIES
-      | BD_Naming.COLL_INACT_CURRENCY;
+      | DBNaming.COLL_INACT_COUNTRIES
+      | DBNaming.COLL_INACT_CURRENCY;
     let updateKey: 'countries' | 'currencies';
 
     switch (table) {
       case TableEnum.COUNTRIES:
-        collectionName = BD_Naming.COLL_INACT_COUNTRIES;
+        collectionName = DBNaming.COLL_INACT_COUNTRIES;
         updateKey = 'countries';
         break;
       case TableEnum.CURRENCY:
-        collectionName = BD_Naming.COLL_INACT_CURRENCY;
+        collectionName = DBNaming.COLL_INACT_CURRENCY;
         updateKey = 'currencies';
         break;
       default:

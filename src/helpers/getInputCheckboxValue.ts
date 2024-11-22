@@ -1,4 +1,4 @@
-export const getInputCheckboxValue = (
-  inactive: string[] | number[],
-  value: string | number,
-) => inactive.includes(value); //TODO
+export const getInputCheckboxValue = <T extends number | string>(
+  inactive: T[],
+  value: T,
+) => inactive.includes(value);

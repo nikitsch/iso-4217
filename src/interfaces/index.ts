@@ -34,8 +34,8 @@ export interface InactiveCurrencies {
   currencies: number[];
 }
 
-export enum BD_Naming {
-  BD = 'iso-4217',
+export enum DBNaming {
+  DB = 'iso-4217',
   COLL_ISO_COUNTRIES = 'isoCountries',
   COLL_CURRENCY = 'currency',
   COLL_INACT_COUNTRIES = 'inactiveCountries',

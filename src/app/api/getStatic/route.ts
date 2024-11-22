@@ -1,12 +1,12 @@
-import { BD_Naming } from '@/interfaces';
+import { DBNaming } from '@/interfaces';
 import clientPromise from '@/lib/mongo';
 
 export async function GET() {
   try {
     const client = await clientPromise;
-    const db = client.db(BD_Naming.BD);
+    const db = client.db(DBNaming.DB);
     const isoCountries = await db
-      .collection(BD_Naming.COLL_ISO_COUNTRIES)
+      .collection(DBNaming.COLL_ISO_COUNTRIES)
       .find({})
       .toArray();
 

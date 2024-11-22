@@ -1,5 +1,5 @@
 import {
-  BD_Naming,
+  DBNaming,
   InactiveCountries,
   InactiveCurrencies,
   Table,
@@ -10,7 +10,7 @@ import clientPromise from '@/lib/mongo';
 export async function GET(request: { url: string | URL }) {
   try {
     const client = await clientPromise;
-    const db = client.db(BD_Naming.BD);
+    const db = client.db(DBNaming.DB);
 
     const { searchParams } = new URL(request.url);
     const table = searchParams.get('table') as Table;
@@ -23,7 +23,7 @@ export async function GET(request: { url: string | URL }) {
 
     if (table === TableEnum.COUNTRIES) {
       const inactiveCountries = await db
-        .collection<InactiveCountries>(BD_Naming.COLL_INACT_COUNTRIES)
+        .collection<InactiveCountries>(DBNaming.COLL_INACT_COUNTRIES)
         .findOne({ _id: 'inactiveCountries' });
 
       return new Response(
@@ -37,7 +37,7 @@ export async function GET(request: { url: string | URL }) {
 
     if (table === TableEnum.CURRENCY) {
       const inactiveCurrencies = await db
-        .collection<InactiveCurrencies>(BD_Naming.COLL_INACT_CURRENCY)
+        .collection<InactiveCurrencies>(DBNaming.COLL_INACT_CURRENCY)
         .findOne({ _id: 'inactiveCurrencies' });
 
       return new Response(
