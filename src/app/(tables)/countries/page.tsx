@@ -20,10 +20,10 @@ export default function Countries() {
 
   const toggleActive = (
     { checked }: EventTarget & HTMLInputElement,
-    country: string,
+    value: string,
   ) => {
     const action = checked ? ActionEnum.ADD : ActionEnum.REMOVE;
-    updateData(action, country);
+    updateData(action, value);
   };
 
   const getCountries = (iso: ISOCountries) => {

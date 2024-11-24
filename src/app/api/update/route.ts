@@ -13,7 +13,7 @@ import clientPromise from '@/lib/mongo';
 type POSTRequestType = {
   table: Table;
   action: Action;
-  element: Pick<Country, 'country'> | Pick<Country, 'numericCode'>;
+  value: Pick<Country, 'country'> | Pick<Country, 'numericCode'>;
 };
 
 export async function POST(request: {
@@ -23,11 +23,11 @@ export async function POST(request: {
     const client = await clientPromise;
     const db = client.db(DBNaming.DB);
 
-    const { table, action, element } = await request.json();
+    const { table, action, value } = await request.json();
 
-    if (!table || !action || !element) {
+    if (!table || !action || !value) {
       return new Response(
-        JSON.stringify({ error: 'Table, action, and element are required' }),
+        JSON.stringify({ error: 'Table, action, and value are required' }),
         { status: 400 },
       );
     }
@@ -59,12 +59,12 @@ export async function POST(request: {
     if (action === ActionEnum.ADD) {
       await collection.updateOne(
         { _id: collectionName },
-        { $addToSet: { [updateKey]: element } },
+        { $addToSet: { [updateKey]: value } },
       );
     } else if (action === ActionEnum.REMOVE) {
       await collection.updateOne(
         { _id: collectionName },
-        { $pull: { [updateKey]: element } },
+        { $pull: { [updateKey]: value } },
       );
     } else {
       return new Response(JSON.stringify({ error: 'Invalid action' }), {

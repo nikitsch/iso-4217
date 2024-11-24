@@ -4,11 +4,11 @@ export function useUpdateData(
   table: Table,
   fetchDynamicData: () => Promise<void>,
 ) {
-  const updateData = async (action: Action, element: string | number) => {
+  const updateData = async (action: Action, value: string | number) => {
     const res = await fetch('/api/update', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ table, action, element }),
+      body: JSON.stringify({ table, action, value }),
     });
 
     if (res.ok) {
