@@ -7,7 +7,7 @@ import {
 } from '@/interfaces';
 import clientPromise from '@/lib/mongo';
 
-export async function GET(request: { url: string | URL }) {
+export async function GET(request: Request) {
   try {
     const client = await clientPromise;
     const db = client.db(DBNaming.DB);

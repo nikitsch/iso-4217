@@ -1,24 +1,19 @@
 import {
-  Action,
   ActionEnum,
   DBNaming,
-  Country,
   InactiveCountries,
   InactiveCurrencies,
-  Table,
   TableEnum,
 } from '@/interfaces';
 import clientPromise from '@/lib/mongo';
 
-type POSTRequestType = {
-  table: Table;
-  action: Action;
-  value: Pick<Country, 'country'> | Pick<Country, 'numericCode'>;
-};
+// type POSTRequestType = {
+//   table: Table;
+//   action: Action;
+//   value: Pick<Country, 'country'> | Pick<Country, 'numericCode'>;
+// };
 
-export async function POST(request: {
-  json: () => PromiseLike<POSTRequestType> | POSTRequestType;
-}) {
+export async function POST(request: Request) {
   try {
     const client = await clientPromise;
     const db = client.db(DBNaming.DB);
