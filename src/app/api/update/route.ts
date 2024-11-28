@@ -7,12 +7,6 @@ import {
 } from '@/interfaces';
 import clientPromise from '@/lib/mongo';
 
-// type POSTRequestType = {
-//   table: Table;
-//   action: Action;
-//   value: Pick<Country, 'country'> | Pick<Country, 'numericCode'>;
-// };
-
 export async function POST(request: Request) {
   try {
     const client = await clientPromise;
