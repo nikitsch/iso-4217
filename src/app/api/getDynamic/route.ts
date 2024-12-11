@@ -49,7 +49,7 @@ export async function GET(request: Request) {
       );
     }
 
-    return new Response(JSON.stringify({ error: 'Unknown schema' }), {
+    return new Response(JSON.stringify({ error: 'Unknown table' }), {
       status: 400,
     });
   } catch (error) {

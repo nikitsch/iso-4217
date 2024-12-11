@@ -8,7 +8,7 @@ export function useGetStaticData() {
 
   useEffect(() => {
     const fetchStaticData = async () => {
-      const res = await fetch('/api/getStatic', { cache: 'force-cache' });
+      const res = await fetch('/api/getStatic');
 
       if (res.ok) {
         const { isoCountries } = await res.json();
