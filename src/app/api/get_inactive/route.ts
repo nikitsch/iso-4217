@@ -54,6 +54,7 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     console.error('Failed to fetch data:', error);
+
     return new Response(JSON.stringify({ error: 'Failed to fetch data' }), {
       status: 500,
     });

@@ -35,7 +35,7 @@ export async function GET(request: Request) {
               .collection<InactiveCountries>(DBNaming.COLL_INACT_COUNTRIES)
               .findOne({ _id: 'inactiveCountries' });
             data = {
-              inactive: inactiveCountries?.countries || [],
+              sseInactive: inactiveCountries?.countries || [],
             };
           }
 
@@ -44,12 +44,12 @@ export async function GET(request: Request) {
               .collection<InactiveCurrencies>(DBNaming.COLL_INACT_CURRENCY)
               .findOne({ _id: 'inactiveCurrencies' });
             data = {
-              inactive: inactiveCurrencies?.currencies || [],
+              sseInactive: inactiveCurrencies?.currencies || [],
             };
           }
 
           const chunk = `data: ${JSON.stringify(data)}\n\n`;
-          controller.enqueue(encoder.encode(chunk));
+          controller.enqueue(encoder.encode(chunk)); //TODO: eventsource-parser
         } catch (error) {
           console.error('SSE error:', error);
           controller.close();

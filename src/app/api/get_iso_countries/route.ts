@@ -9,6 +9,7 @@ export async function GET() {
       .collection(DBNaming.COLL_ISO_COUNTRIES)
       .find({})
       .toArray();
+
     return new Response(JSON.stringify({ isoCountries }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },

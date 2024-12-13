@@ -2,20 +2,20 @@
 
 import { ActionEnum, ISOCountries, PageList, TableEnum } from '@/interfaces';
 
-import { useGetStaticData } from '@/hooks/useGetStaticData';
-import { useGetDynamicData } from '@/hooks/useGetDynamicData';
-import { useUpdateData } from '@/hooks/useUpdateData';
+import { useGetISOCountries } from '@/hooks/useGetISOCountries';
+import { useGetInactiveCountries } from '@/hooks/useGetInactiveCountries';
+import { useUpdateInactiveData } from '@/hooks/useUpdateInactiveData';
 import { getInputCheckboxValue } from '@/helpers/getInputCheckboxValue';
 
 import '../styles.css';
 
 export default function Countries() {
-  const { isoCountries } = useGetStaticData();
-  const { inactiveCountries, fetchDynamicData } = useGetDynamicData(
+  const { isoCountries } = useGetISOCountries();
+  const { inactiveCountries, fetchInactiveCountries } =
+    useGetInactiveCountries();
+  const { updateInactiveData } = useUpdateInactiveData(
     TableEnum.COUNTRIES,
-  );
-  const { updateData } = useUpdateData(TableEnum.COUNTRIES, () =>
-    fetchDynamicData(TableEnum.COUNTRIES),
+    fetchInactiveCountries,
   );
 
   const toggleActive = (
@@ -23,7 +23,7 @@ export default function Countries() {
     value: string,
   ) => {
     const action = checked ? ActionEnum.ADD : ActionEnum.REMOVE;
-    updateData(action, value);
+    updateInactiveData(action, value);
   };
 
   const getCountries = (iso: ISOCountries) => {

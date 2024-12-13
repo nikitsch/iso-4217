@@ -2,7 +2,7 @@ import { Table } from '@/interfaces';
 import { useEffect, useState } from 'react';
 
 export function useSSEInactive<T extends number | string>(table: Table) {
-  const [data, setData] = useState<{ inactive: T[] }>({ inactive: [] });
+  const [data, setData] = useState<{ sseInactive: T[] }>({ sseInactive: [] });
 
   useEffect(() => {
     const eventSource = new EventSource(`/api/sse?table=${table}`);

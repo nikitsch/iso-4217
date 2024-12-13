@@ -2,20 +2,21 @@
 
 import { ActionEnum, ISOCountries, PageList, TableEnum } from '@/interfaces';
 
-import { useGetStaticData } from '@/hooks/useGetStaticData';
-import { useGetDynamicData } from '@/hooks/useGetDynamicData';
+import { useGetISOCountries } from '@/hooks/useGetISOCountries';
+import { useGetInactiveCurrencies } from '@/hooks/useGetInactiveCurrencies';
+import { useUpdateInactiveData } from '@/hooks/useUpdateInactiveData';
+import { currencyCompareFn } from '@/helpers/currencyCompareFn';
+import { getInputCheckboxValue } from '@/helpers/getInputCheckboxValue';
 
 import '../styles.css';
-import { getInputCheckboxValue } from '@/helpers/getInputCheckboxValue';
-import { useUpdateData } from '@/hooks/useUpdateData';
 
 export default function Currencies() {
-  const { isoCountries } = useGetStaticData();
-  const { inactiveCurrencies, fetchDynamicData } = useGetDynamicData(
+  const { isoCountries } = useGetISOCountries();
+  const { inactiveCurrencies, fetchInactiveCurrencies } =
+    useGetInactiveCurrencies();
+  const { updateInactiveData } = useUpdateInactiveData(
     TableEnum.CURRENCY,
-  );
-  const { updateData } = useUpdateData(TableEnum.CURRENCY, () =>
-    fetchDynamicData(TableEnum.CURRENCY),
+    fetchInactiveCurrencies,
   );
 
   const toggleActive = (
@@ -23,7 +24,7 @@ export default function Currencies() {
     numericCode: number,
   ) => {
     const action = checked ? ActionEnum.ADD : ActionEnum.REMOVE;
-    updateData(action, numericCode);
+    updateInactiveData(action, numericCode);
   };
 
   const getCurrencies = (iso: ISOCountries) => {
@@ -46,31 +47,13 @@ export default function Currencies() {
     }, {});
   };
 
-  const sortCountries = (
-    a: [numericCode: string, item: PageList],
-    b: [numericCode: string, item: PageList],
-  ) => {
-    const nameA = a[1].alphabeticCodes[0];
-    const nameB = b[1].alphabeticCodes[0];
-
-    if (nameA < nameB) {
-      return -1;
-    }
-
-    if (nameA > nameB) {
-      return 1;
-    }
-
-    return 0;
-  };
-
   return (
     <div>
       <h1 className="table-title">Currency</h1>
       {isoCountries?.length ? (
         <div className="list">
           {Object.entries(getCurrencies(isoCountries))
-            .sort(sortCountries)
+            .sort(currencyCompareFn)
             .map(
               ([numericCode, item]: [numericCode: string, item: PageList]) => {
                 const { _id, alphabeticCodes, countries } = item;
